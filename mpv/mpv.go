@@ -15,12 +15,12 @@ func PlayMediaFile(file string) error {
 
 	// if mpv is not running - err will be present, so we need to run mpv
 	if err != nil {
-		err = RunMpv(file)
+		err = runMpv(file)
 		if err != nil {
 			return err
 		}
 	} else {
-		err = AddFileToQueue(sock, file)
+		err = addFileToQueue(sock, file)
 		if err != nil {
 			return err
 		}
@@ -29,7 +29,7 @@ func PlayMediaFile(file string) error {
 	return nil
 }
 
-func RunMpv(file string) error {
+func runMpv(file string) error {
 	cmd := exec.Command("mpv", []string{
 		"--no-terminal",
 		"--on-all-workspaces",
@@ -55,7 +55,7 @@ func RunMpv(file string) error {
 	return nil
 }
 
-func AddFileToQueue(sock net.Conn, file string) error {
+func addFileToQueue(sock net.Conn, file string) error {
 	// send the loadfile command to mpv via the socket we specify, neat!
 	_, err := sock.Write([]byte(fmt.Sprintf("raw loadfile %v append\n", file)))
 	if err != nil {
